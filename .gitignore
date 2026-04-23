@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+myenv/
+venv/
+env/
+
+# Data files (optional)
+*.csv
+*.npy
+*.index
+
+# Mac
+.DS_Store
