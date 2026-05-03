@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 
 # converts sentences into vectors
 from sentence_transformers import SentenceTransformer
-from build_index import index 
+from build_index import index
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
@@ -90,7 +90,7 @@ def recommend(song_name, k=5):
         "playlist_genre",
         "similarity",
         "track_popularity"
-    ]]
+    ]].to_dict(orient="records")
 
 # helper to parse query for vibe recommendation
 def parse_vibe(query):
@@ -107,7 +107,9 @@ def parse_vibe(query):
         if word in VIBE_MAP:
             for key, value in VIBE_MAP[word].items():
                 params[key] = value
-
+    
+    # print("PARAMS:")
+    # print(params)
     return params
 
 # helper to extract genre from query if present
@@ -175,7 +177,7 @@ def vibe_search_text(query, k=5):
         "track_artist",
         "playlist_genre",
         "similarity"
-    ]]
+    ]].to_dict(orient="records")
 
 # recommendation based on vibe from numeric input
 def vibe_search(valence=0.5, energy=0.5, danceability=0.5, tempo=120, k=5):
@@ -224,65 +226,3 @@ def vibe_search(valence=0.5, energy=0.5, danceability=0.5, tempo=120, k=5):
         "playlist_genre",
         "similarity"
     ]]
-
-if __name__ == "__main__":
-
-    while True:
-        print("Song Recommender")
-        print("1. Find similar songs")
-        print("2. Search by vibe")
-        print("3. Exit")
-
-        choice = input("\nEnter choice (1/2/3): ").strip()
-
-        # song recommendation
-        if choice == "1":
-            song = input("\nEnter song name: ").strip()
-
-            results = recommend(song, k=5)
-
-            if results is not None:
-                print("\nSimilar songs:\n")
-                print(results.to_string(index=False))
-
-        # vibe search
-        elif choice == "2":
-            query = input("Describe the vibe: ")
-
-            results = vibe_search_text(query)
-
-            print("\nResults:\n")
-            print(results.to_string(index=False))
-            """
-            try:
-                print("\nEnter vibe values (0 → 1):")
-
-                valence = float(input("Happiness: "))
-                energy = float(input("Energy: "))
-                danceability = float(input("Danceability: "))
-
-                tempo_input = input("Tempo (default 120): ").strip()
-                tempo = float(tempo_input) if tempo_input else 120
-
-                results = vibe_search(
-                    valence=valence,
-                    energy=energy,
-                    danceability=danceability,
-                    tempo=tempo,
-                    k=5
-                )
-
-                print("\nVibe results:\n")
-                print(results.to_string(index=False))
-
-            except ValueError:
-                print("\nInvalid input — please enter numbers")
-                """
-
-        # exit
-        elif choice == "3":
-            print("\nGoodbye")
-            break
-
-        else:
-            print("\nInvalid choice")
