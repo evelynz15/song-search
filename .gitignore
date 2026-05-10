@@ -8,9 +8,9 @@ venv/
 env/
 
 # Data files (optional)
-*.csv
-*.npy
-
+# *.csv
+# *.npy
+# *.index
 
 # Mac
 .DS_Store
