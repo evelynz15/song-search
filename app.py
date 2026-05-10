@@ -1,11 +1,19 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from recommend_songs import recommend, vibe_search_text
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Song Recommender API")
-# -----------------------------
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Request models
-# -----------------------------
 class SongRequest(BaseModel):
     song: str
 

@@ -40,8 +40,8 @@ GENRES = [
 ]
 
 # build new index or update
-csv_file = input("Enter dataset file: ")
-index(csv_file)
+# csv_file = input("Enter dataset file: ")
+index("spotify_songs.csv")
 
 # load data
 index = faiss.read_index("songs.index")
@@ -85,11 +85,11 @@ def recommend(song_name, k=5):
     results["similarity"] = distances[0][1:]
 
     return results[[
+        "track_id",
         "track_name",
         "track_artist",
         "playlist_genre",
-        "similarity",
-        "track_popularity"
+        "similarity"
     ]].to_dict(orient="records")
 
 # helper to parse query for vibe recommendation
@@ -173,6 +173,7 @@ def vibe_search_text(query, k=5):
         results["similarity"] = distances[0]
 
     return results.head(k)[[
+        "track_id",
         "track_name",
         "track_artist",
         "playlist_genre",
