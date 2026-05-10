@@ -10,7 +10,7 @@ env/
 # Data files (optional)
 *.csv
 *.npy
-*.index
+
 
 # Mac
 .DS_Store

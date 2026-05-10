@@ -41,7 +41,7 @@ GENRES = [
 
 # build new index or update
 # csv_file = input("Enter dataset file: ")
-index("spotify_songs.csv")
+# index("spotify_songs.csv")
 
 # load data
 index = faiss.read_index("songs.index")
