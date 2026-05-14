@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from recommend_songs import recommend, vibe_search_text
+from recommend_songs import recommend, vibe_search_text, search_song_options
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Song Recommender API")
@@ -14,8 +14,11 @@ app.add_middleware(
 )
 
 # Request models
-class SongRequest(BaseModel):
+class SongOptionsRequest(BaseModel):
     song: str
+
+class SongRequest(BaseModel):
+    track_id: str
 
 class VibeRequest(BaseModel):
     query: str
@@ -24,9 +27,14 @@ class VibeRequest(BaseModel):
 def root():
     return {"message": "Song Recommender API is running"}
 
+@app.post("/search/song")
+def search_song(req: SongOptionsRequest):
+    results = search_song_options(req.song)
+    return results
+
 @app.post("/recommend/song")
 def recommend_by_song(req: SongRequest):
-    results = recommend(req.song)
+    results = recommend(req.track_id)
     print(results)
     return results
 

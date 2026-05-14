@@ -51,30 +51,38 @@ vectors = np.load("vectors.npy")
 with open("scaler.pkl", "rb") as f:
     scaler = pickle.load(f)
 
-# recommendation function by song name 
-def recommend(song_name, k=5):
+# finds all songs with matching name and returns options
+def search_song_options(song_name):
     # Find song index
-    matches = df[df["track_name"].str.lower() == song_name.lower()]
+    matches = df[
+        df["track_name"]
+        .str.lower()
+        .str.strip()  
+        == song_name.lower().strip()
+    ]
+
+    matches = matches[[
+        "track_id",
+        "track_name",
+        "track_artist",
+        "playlist_genre"
+    ]].drop_duplicates()
 
     if len(matches) == 0:
         print("Song not found")
         return None
+
+    return matches.to_dict(orient="records")
+
+# recommendation function by track id 
+def recommend(track_id, k=5):
+    # Find song index
+    match = df[df["track_id"] == track_id]
+
+    if len(match) == 0:
+        return []
     
-    # handle multiple songs of the same name by providing options
-    if len(matches) > 1:
-        print("\nMultiple matches found:\n")
-
-        for i, (_, row) in enumerate(matches.iterrows()):
-            print(f"{i}: {row['track_name']} — {row['track_artist']}")
-
-        try:
-            choice = int(input("\nSelect a number: "))
-            idx = matches.index[choice]
-        except:
-            print("Invalid selection")
-            return None
-    else:
-        idx = matches.index[0]
+    idx = match.index[0]
 
     query_vector = vectors[idx].reshape(1, -1).astype("float32")
 
